@@ -1,5 +1,6 @@
 package com.iter.marmoset;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,22 +10,20 @@ import android.widget.TextView;
 
 import com.iter.marmoset.SalonFragment.OnListFragmentInteractionListener;
 import com.iter.marmoset.dummy.DummyContent.DummyItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MySalonRecyclerViewAdapter extends RecyclerView.Adapter<MySalonRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
+    List<Salon> mValues;
+    Context context;
 
-    public MySalonRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MySalonRecyclerViewAdapter(List<Salon> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
+        this.context = context;
     }
 
     @Override
@@ -35,18 +34,17 @@ public class MySalonRecyclerViewAdapter extends RecyclerView.Adapter<MySalonRecy
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
-
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.nameView.setText(mValues.get(position).getName());
+        holder.addressView.setText(mValues.get(position).getAddress().replace("\\n","\n"));
+        Picasso.with(context).load(mValues.get(position).getImage_url()).resize(600,600).centerCrop().into(holder.promoView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(mValues.get(position));
                 }
             }
         });

@@ -2,17 +2,25 @@ package com.iter.marmoset;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.iter.marmoset.dummy.DummyContent;
 import com.iter.marmoset.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,11 +31,8 @@ import java.util.List;
  */
 public class SalonFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -38,10 +43,9 @@ public class SalonFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static SalonFragment newInstance(int columnCount) {
+    public static SalonFragment newInstance() {
         SalonFragment fragment = new SalonFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,27 +54,32 @@ public class SalonFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_salon_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_salon_list, container, false);
+        final RecyclerView recyclerView = (RecyclerView) view;
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        db.collection("Salons").whereEqualTo("zipcode", "10010").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    List<Salon> salons = new ArrayList<Salon>();
+                    for (DocumentSnapshot documentSnapshot : task.getResult()){
+                        Log.e("results: ", documentSnapshot.getData().toString());
+                        Salon salon = documentSnapshot.toObject(Salon.class);
+                        salons.add(salon);
+                        recyclerView.setAdapter(new MySalonRecyclerViewAdapter(salons, mListener, getActivity()));
+                    }
+                }
             }
-            recyclerView.setAdapter(new MySalonRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
+        });
+        // Set the adapter
+
         return view;
     }
 
@@ -92,18 +101,8 @@ public class SalonFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Salon salon);
     }
 }

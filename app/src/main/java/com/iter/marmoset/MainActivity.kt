@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             // user already signed in
-            val vaccineFragment: Fragment = SalonFragment.newInstance(1)
-            supportFragmentManager.beginTransaction().replace(R.id.content_view, vaccineFragment).commit()
+            val salonFragment: Fragment = SalonFragment.newInstance()
+            supportFragmentManager.beginTransaction().replace(R.id.content_view, salonFragment).commit()
 
         }else{
             // handle sign in
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == AppCompatActivity.RESULT_OK) {
                 // Successfully signed
-                val vaccineFragment: Fragment = SalonFragment.newInstance(1)
+                val vaccineFragment: Fragment = SalonFragment.newInstance()
                 supportFragmentManager.beginTransaction().replace(R.id.content_view, vaccineFragment).commit()
             } else {
                 // TODO: handle sign in failed
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
 
     }
 
-    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+    override fun onListFragmentInteraction(salon: Salon) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
