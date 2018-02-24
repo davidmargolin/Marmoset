@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iter.marmoset.SalonFragment.OnListFragmentInteractionListener;
-import com.iter.marmoset.dummy.DummyContent.DummyItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
