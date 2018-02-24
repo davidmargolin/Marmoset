@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iter.marmoset.SalonFragment.OnListFragmentInteractionListener;
@@ -58,20 +59,17 @@ public class MySalonRecyclerViewAdapter extends RecyclerView.Adapter<MySalonRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView nameView;
+        public final TextView addressView;
+        public final ImageView promoView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            nameView = (TextView) view.findViewById(R.id.name);
+            addressView = (TextView) view.findViewById(R.id.address);
+            promoView = (ImageView) view.findViewById(R.id.salonpic);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 }
