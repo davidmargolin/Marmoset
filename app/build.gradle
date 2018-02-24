@@ -8,7 +8,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.iter.marmoset"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -37,7 +37,10 @@ dependencies {
     implementation 'com.daimajia.slider:library:1.1.5@aar'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.stripe:stripe-android:6.0.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.sequencing:master-plugin:1.0.32'
 }
+
 
 
 apply plugin: 'com.google.gms.google-services'
