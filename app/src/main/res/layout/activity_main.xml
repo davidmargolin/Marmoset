@@ -8,12 +8,25 @@
     android:layout_height="match_parent"
     tools:context="com.iter.marmoset.MainActivity">
 
-
-        <RelativeLayout
-            android:id="@+id/content_view"
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?android:attr/windowBackground"
+            app:menu="@menu/menu_main" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/navigation"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical">
+                <RelativeLayout
+                    android:id="@+id/content_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        </RelativeLayout>
+                </RelativeLayout>
+        </LinearLayout>
 
 </RelativeLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/salons"
+        android:icon="@drawable/ic_store_mall_directory_black_24dp"
+        android:title="Salons"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/appointments"
+        android:icon="@drawable/ic_access_time_black_24dp"
+        android:title="Appointments"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="Edit Profile"
+        app:showAsAction="always" />
+</menu>
