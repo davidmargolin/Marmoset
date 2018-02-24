@@ -34,6 +34,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:11.8.0'
     implementation 'com.google.firebase:firebase-auth:11.8.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+    implementation 'com.nineoldandroids:library:2.4.0'
 }
 
 

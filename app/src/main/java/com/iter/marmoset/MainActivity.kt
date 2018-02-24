@@ -9,7 +9,6 @@ import android.view.MenuItem
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.iter.marmoset.dummy.DummyContent
 
 // sign in response id and providers used with AuthUI
 private const val RC_SIGN_IN = 420
@@ -58,7 +57,13 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
     }
 
     override fun onListFragmentInteraction(salon: Salon) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(this, SalonActivity::class.java).apply {
+            putExtra("address", salon.address)
+            putExtra("name", salon.name)
+            putExtra("image_url", salon.image_url)
+            putExtra("slideshow", salon.slideshow)
+        }
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
