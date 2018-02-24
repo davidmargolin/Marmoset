@@ -9,13 +9,14 @@ import android.view.MenuItem
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.iter.marmoset.dummy.DummyContent
 
 // sign in response id and providers used with AuthUI
 private const val RC_SIGN_IN = 420
 private val providers = mutableListOf(
         AuthUI.IdpConfig.EmailBuilder().build())
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractionListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseApp.initializeApp(this)
         super.onCreate(savedInstanceState)
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
