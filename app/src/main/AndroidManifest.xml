@@ -26,7 +26,11 @@
         <activity
             android:name=".SalonActivity"
             android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BillingActivity"
+            android:label="@string/title_activity_billing"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
