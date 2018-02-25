@@ -1,33 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginTop="8dp"
     android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/salonpic"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="8dp"/>
-
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/salonpic"
-        android:layout_toEndOf="@+id/salonpic"
-        android:padding="2dp"
-        android:textSize="14sp"
-        tools:text="Marsy's Salon" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
-        android:layout_toEndOf="@+id/salonpic"
-        android:maxLines="2"
-        android:padding="2dp"
-        tools:text="425 e 25th st\nNew York, NY 10010" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp">
 
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/salonpic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="8dp" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/salonpic"
+                android:layout_marginRight="12dp"
+                android:layout_toEndOf="@+id/salonpic"
+                android:layout_toStartOf="@+id/textView2"
+                android:padding="2dp"
+                android:textSize="14sp"
+                tools:text="Marsy's Salon" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/name"
+                android:layout_toEndOf="@+id/salonpic"
+                android:maxLines="2"
+                android:padding="2dp"
+                tools:text="425 e 25th st\nNew York, NY 10010" />
+
+            <TextView
+                android:id="@+id/likes"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/address"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/name"
+                android:textColor="@android:color/holo_orange_dark"
+                android:layout_marginRight="16dp"
+                android:text="24 Likes" />
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

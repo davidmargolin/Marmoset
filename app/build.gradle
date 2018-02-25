@@ -50,10 +50,13 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.stripe:stripe-android:6.0.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'com.github.arimorty:floatingsearchview:2.1.1'
     implementation('com.sequencing:master-plugin:1.0.32') {
         exclude module: 'httpclient'
     }
     implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 }
+
 
 apply plugin: 'com.google.gms.google-services'

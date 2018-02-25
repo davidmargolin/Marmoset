@@ -15,9 +15,11 @@
             android:layout_alignParentBottom="true"
             android:background="?android:attr/windowBackground"
             app:menu="@menu/menu_main" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
             android:layout_above="@+id/navigation"
             android:layout_alignParentStart="true"
             android:orientation="vertical">
@@ -28,5 +30,16 @@
 
                 </RelativeLayout>
         </LinearLayout>
-
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/floating_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:floatingSearch_searchBarMarginLeft="8dp"
+            app:floatingSearch_searchBarMarginRight="8dp"
+            app:floatingSearch_searchBarMarginTop="8dp"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"
+            app:floatingSearch_searchHint="Search Salons By Zip Code..."
+            app:floatingSearch_leftActionMode="showSearch"
+            app:floatingSearch_showSearchKey="false"
+            app:floatingSearch_suggestionsListAnimDuration="250" />
 </RelativeLayout>

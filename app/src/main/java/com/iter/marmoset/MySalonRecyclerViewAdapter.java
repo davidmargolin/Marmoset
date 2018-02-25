@@ -36,6 +36,7 @@ public class MySalonRecyclerViewAdapter extends RecyclerView.Adapter<MySalonRecy
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.nameView.setText(mValues.get(position).getName());
         holder.addressView.setText(mValues.get(position).getAddress().replace("\\n","\n"));
+        holder.likesView.setText(Integer.toString(mValues.get(position).getLikes())+" Likes");
         Picasso.with(context).load(mValues.get(position).getImage_url()).resize(600,600).centerCrop().into(holder.promoView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,10 +60,11 @@ public class MySalonRecyclerViewAdapter extends RecyclerView.Adapter<MySalonRecy
         public final TextView nameView;
         public final TextView addressView;
         public final ImageView promoView;
-
+        public final TextView likesView;
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            likesView = (TextView) view.findViewById(R.id.likes);
             nameView = (TextView) view.findViewById(R.id.name);
             addressView = (TextView) view.findViewById(R.id.address);
             promoView = (ImageView) view.findViewById(R.id.salonpic);

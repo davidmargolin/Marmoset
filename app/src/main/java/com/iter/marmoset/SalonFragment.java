@@ -1,6 +1,7 @@
 package com.iter.marmoset;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import java.util.List;
 public class SalonFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
+    String query = "*";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
@@ -40,9 +42,10 @@ public class SalonFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static SalonFragment newInstance() {
+    public static SalonFragment newInstance(String query) {
         SalonFragment fragment = new SalonFragment();
         Bundle args = new Bundle();
+        args.putString("query", query);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +53,7 @@ public class SalonFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        query = getArguments().getString("query");
 
     }
 
@@ -58,23 +61,41 @@ public class SalonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_salon_list, container, false);
-        final RecyclerView recyclerView = (RecyclerView) view;
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        db.collection("Salons").whereEqualTo("zipcode", "10010").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    List<Salon> salons = new ArrayList<Salon>();
-                    for (DocumentSnapshot documentSnapshot : task.getResult()){
-                        Log.e("results: ", documentSnapshot.getData().toString());
-                        Salon salon = documentSnapshot.toObject(Salon.class);
-                        salons.add(salon);
+        if (query.equals("*")){
+            db.collection("Salons").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        List<Salon> salons = new ArrayList<Salon>();
+                        for (DocumentSnapshot documentSnapshot : task.getResult()){
+                            Log.e("results: ", documentSnapshot.getData().toString());
+                            Salon salon = documentSnapshot.toObject(Salon.class);
+                            salons.add(salon);
+                        }
                         recyclerView.setAdapter(new MySalonRecyclerViewAdapter(salons, mListener, getActivity()));
+
                     }
                 }
-            }
-        });
+            });
+        }else {
+            db.collection("Salons").whereEqualTo("zipcode", query).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        List<Salon> salons = new ArrayList<Salon>();
+                        for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                            Log.e("results: ", documentSnapshot.getData().toString());
+                            Salon salon = documentSnapshot.toObject(Salon.class);
+                            salons.add(salon);
+                            recyclerView.setAdapter(new MySalonRecyclerViewAdapter(salons, mListener, getActivity()));
+                        }
+                    }
+                }
+            });
+        }
         // Set the adapter
 
         return view;

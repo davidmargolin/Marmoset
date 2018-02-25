@@ -5,38 +5,92 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.iter.marmoset.ProfileFragment">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="24dp"
         android:background="@color/colorPrimary">
-    <!-- TODO: Update blank fragment layout -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_gravity="center"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/prof_pic"
         app:civ_border_width="2dp"
         app:civ_border_color="@android:color/white"
         tools:src="@drawable/ic_account_circle_black_24dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
         <EditText
             android:background="@android:color/transparent"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_marginHorizontal="16dp"
+            android:id="@+id/prof_name"
+            android:maxLines="1"
+            tools:text="Jenny Carter"/>
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:padding="4dp"
-            android:id="@+id/prof_name"
-            tools:text="Jenny Carter"/>
+            android:textSize="12sp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:layout_marginHorizontal="16dp"
+            android:id="@+id/email"
+            tools:text="davidmargolin0305@gmail.com"/>
+        </LinearLayout>
     </LinearLayout>
+    </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_margin="8dp"
+            android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="12dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="About Me"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:id="@+id/about_me"
+            android:lines="6"
+            android:textSize="16sp"
+            android:gravity="top"
+            android:layout_gravity="top"
+            android:hint="Help stylists get to know you..."
+            android:background="@android:color/transparent"
+            tools:text="this is my life blah blah blah"/>
+    </LinearLayout>
+        </android.support.v7.widget.CardView>
     <Button
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="48dp"
         android:background="@android:color/holo_green_light"
+        android:textStyle="bold"
         android:layout_margin="8dp"
+
+        android:layout_marginTop="8dp"
         android:id="@+id/sequence_connect"
-        android:text="Continue with Sequencing.com"
+        android:text="Import Sequencing.com File"
+        android:textColor="@android:color/white"
         />
 </LinearLayout>
