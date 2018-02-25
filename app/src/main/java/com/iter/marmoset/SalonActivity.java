@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class SalonActivity extends AppCompatActivity {
     String name;
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +26,7 @@ public class SalonActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         name = getIntent().getStringExtra("name");
+        id = getIntent().getStringExtra("id");
         getSupportActionBar().setTitle(name);
         ArrayList<String> slideshow = getIntent().getStringArrayListExtra("slideshow");
         Log.e("urls", slideshow.toString());
@@ -42,7 +44,7 @@ public class SalonActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication(), BillingActivity.class);
-                intent.putExtra("id", 529852);
+                intent.putExtra("id", id);
                 intent.putExtra("name", name);
                 startActivity(intent);
             }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/biz_appointments"
+        android:icon="@drawable/ic_access_time_black_24dp"
+        android:title="Appointments"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/biz_profile"
+        android:icon="@drawable/ic_store_mall_directory_black_24dp"
+        android:title="Edit Business"
+        app:showAsAction="always" />
+</menu>

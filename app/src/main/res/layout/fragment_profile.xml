@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginTop="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.iter.marmoset.ProfileFragment">
     <android.support.v7.widget.CardView
@@ -93,4 +94,12 @@
         android:text="Import Sequencing.com File"
         android:textColor="@android:color/white"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:id="@+id/switcher"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_marginHorizontal="8dp"
+        android:text="I am a salon owner"/>
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,21 +17,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.iter.marmoset.dummy.DummyContent;
-import com.iter.marmoset.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BookingsFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    Boolean business;
     public BookingsFragment() {
     }
 
-    public static BookingsFragment newInstance() {
+    public static BookingsFragment newInstance(Boolean business) {
         BookingsFragment fragment = new BookingsFragment();
         Bundle args = new Bundle();
+        args.putBoolean("business", business);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,7 +37,7 @@ public class BookingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        business = getArguments().getBoolean("business");
     }
 
     @Override
@@ -54,21 +51,43 @@ public class BookingsFragment extends Fragment {
 
             final RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            db.collection("Appointments").whereEqualTo("client_id", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()){
-                        ArrayList<Booking> books = new ArrayList<Booking>();
-                        for (DocumentSnapshot documentSnapshot : task.getResult()){
-                            Log.e("results: ", documentSnapshot.getData().toString());
-                            Booking book = documentSnapshot.toObject(Booking.class);
-                            books.add(book);
-                        }
-                        recyclerView.setAdapter(new MyBookingsRecyclerViewAdapter(books));
+            if (business){
+                ViewGroup.MarginLayoutParams marginLayoutParams =
+                        (ViewGroup.MarginLayoutParams) recyclerView.getLayoutParams();
+                marginLayoutParams.setMargins(0, 0, 0, 0);
+                recyclerView.setLayoutParams(marginLayoutParams);
+                db.collection("Appointments").whereEqualTo("salon_id", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<Booking> books = new ArrayList<Booking>();
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                Log.e("results: ", documentSnapshot.getData().toString());
+                                Booking book = documentSnapshot.toObject(Booking.class);
+                                books.add(book);
+                            }
+                            recyclerView.setAdapter(new MyBookingsRecyclerViewAdapter(books, true, getActivity()));
 
+                        }
                     }
-                }
-            });
+                });
+            }else {
+                db.collection("Appointments").whereEqualTo("client_id", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<Booking> books = new ArrayList<Booking>();
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                Log.e("results: ", documentSnapshot.getData().toString());
+                                Booking book = documentSnapshot.toObject(Booking.class);
+                                books.add(book);
+                            }
+                            recyclerView.setAdapter(new MyBookingsRecyclerViewAdapter(books, false, getActivity()));
+
+                        }
+                    }
+                });
+            }
         }
         return view;
     }

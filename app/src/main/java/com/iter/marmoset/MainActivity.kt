@@ -7,11 +7,17 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.data.model.User
+import com.github.kittinunf.fuel.Fuel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,11 +25,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 private const val RC_SIGN_IN = 420
 private val providers = mutableListOf(
         AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build())
+internal var db = FirebaseFirestore.getInstance()
 
 class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractionListener, ProfileFragment.OnProfileFragmentInteractionListener{
     var bottomnav : BottomNavigationView? = null
     var query : String = "*"
     var floatingSearchView:FloatingSearchView? = null
+    var business: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseApp.initializeApp(this)
         super.onCreate(savedInstanceState)
@@ -46,9 +54,10 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
         var user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             // user already signed in
-            bottomnav!!.selectedItemId = R.id.salons
+            handlemenu(user);
 
         }else{
+
             // handle sign in
             Log.e("help:","no user found");
             startActivityForResult(
@@ -86,12 +95,30 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
             R.id.appointments -> {
                 floatingSearchView!!.setSearchText("")
 
-                val bookingsFragment: Fragment = BookingsFragment.newInstance()
+                val bookingsFragment: Fragment = BookingsFragment.newInstance(false)
                 supportFragmentManager.beginTransaction().replace(R.id.content_view, bookingsFragment).commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.biz_appointments -> {
+                val bookingsFragment: Fragment = BookingsFragment.newInstance(true)
+                supportFragmentManager.beginTransaction().replace(R.id.content_view, bookingsFragment).commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.biz_profile -> {
+                val bizProfFragment: Fragment = BizProfFragment.newInstance()
+                supportFragmentManager.beginTransaction().replace(R.id.content_view, bizProfFragment).commit()
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
+    }
+
+    fun switcher(){
+        val i = baseContext.packageManager
+                .getLaunchIntentForPackage(baseContext.packageName)
+        i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        finish()
+        startActivity(i)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -99,13 +126,12 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
             if (resultCode == RESULT_OK) {
                 // Successfully signed in - update vaccines
                 if (bottomnav != null){
-                    bottomnav!!.selectedItemId = R.id.salons
+                    handlemenu(FirebaseAuth.getInstance().currentUser!!)
                 }
             } else {
                 // TODO: handle sign in failed
             }
         }
-        bottomnav!!.selectedItemId = R.id.salons
 
     }
 
@@ -119,6 +145,7 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
         val intent = Intent(this, SalonActivity::class.java).apply {
             putExtra("address", salon.address)
             putExtra("name", salon.name)
+            putExtra("id", salon.id)
             putExtra("description", salon.description)
             putExtra("image_url", salon.image_url)
             putExtra("slideshow", salon.slideshow)
@@ -126,5 +153,26 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
         startActivity(intent)
     }
 
+    fun handlemenu(user:FirebaseUser){
+        db.collection("Users").document(user.uid).get().addOnCompleteListener {task->
+            var documentSnapshot:DocumentSnapshot = task.getResult();
+            if (documentSnapshot.exists() && (documentSnapshot.get("is_biz")==true)) {
+                business = true
+                bottomnav!!.inflateMenu(R.menu.menu_biz)
+                bottomnav!!.selectedItemId = R.id.biz_appointments
+                floatingSearchView!!.visibility=View.GONE
+                Log.e("business", "true")
+
+            }else {
+                business = false
+                bottomnav!!.inflateMenu(R.menu.menu_user)
+
+                Log.e("business", "false")
+                bottomnav!!.selectedItemId = R.id.salons
+                supportActionBar!!.hide()
+
+            }
+        }
+    }
 
 }

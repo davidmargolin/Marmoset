@@ -12,33 +12,32 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.github.kittinunf.fuel.Fuel;
+import com.github.kittinunf.fuel.core.FuelError;
+import com.github.kittinunf.fuel.core.Handler;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.sequencing.androidoauth.core.ISQAuthCallback;
 import com.sequencing.androidoauth.core.OAuth2Parameters;
 import com.sequencing.androidoauth.core.SQUIoAuthHandler;
-import com.sequencing.appchains.AppChains;
-import com.sequencing.appchains.DefaultAppChainsImpl;
 import com.sequencing.fileselector.FileEntity;
 import com.sequencing.fileselector.core.ISQFileCallback;
 import com.sequencing.fileselector.core.SQUIFileSelectHandler;
 import com.sequencing.oauth.config.AuthenticationParameters;
 import com.sequencing.oauth.core.Token;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
-import org.androidannotations.annotations.App;
-
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ProfileFragment extends Fragment implements ISQAuthCallback {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // TODO: Rename and change types of parameters
     private String name;
@@ -47,7 +46,7 @@ public class ProfileFragment extends Fragment implements ISQAuthCallback {
     private String email;
     SQUIoAuthHandler ioAuthHandler;
     private OnProfileFragmentInteractionListener mListener;
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -102,6 +101,18 @@ public class ProfileFragment extends Fragment implements ISQAuthCallback {
                 .into(profPic);
 
         profName.setText(name);
+        TextView switcher = view.findViewById(R.id.switcher);
+        switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> data = new HashMap<>();
+                data.put("is_biz", true);
+
+                db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .set(data, SetOptions.merge());
+                ((MainActivity)getActivity()).switcher();
+            }
+        });
         return view;
     }
 
@@ -130,51 +141,21 @@ public class ProfileFragment extends Fragment implements ISQAuthCallback {
 
     @Override
     public void onAuthentication(final Token token){
-        Log.e("yay token1!!", token.getAccessToken());
         SQUIFileSelectHandler fileSelectHandler = new SQUIFileSelectHandler(this.getActivity());
         fileSelectHandler.selectFile(OAuth2Parameters.getInstance().getOauth(), new ISQFileCallback() {
             @Override
             public void onFileSelected(FileEntity entity, Activity activity) {
-                MediaType JSON
-                        = MediaType.parse("application/json; charset=utf-8");
-
-                OkHttpClient client = new OkHttpClient();
-                RequestBody body = RequestBody.create(JSON, "");
-                Request request = new Request.Builder()
-                        .url("https://appchainskms.azurewebsites.net/api/HttpTriggerPython31?code=SxLl3btzGiE/4JJEwbIkXSzsCYhLUEVMyu6BUxJSFDiYc5ywFgLvOQ==")
-                        .post(body)
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                    if (response.body().string() == "Success") {
-                        Toast.makeText(getActivity(), "Success!.", Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(getActivity(),"Error. Please try again.", Toast.LENGTH_LONG).show();
+                Fuel.post("https://appchainskms.azurewebsites.net/api/HttpTriggerPython31?code=SxLl3btzGiE/4JJEwbIkXSzsCYhLUEVMyu6BUxJSFDiYc5ywFgLvOQ==").body(("{ \"token\" : \""+token.getAccessToken()+"\", \"file\" : \""+entity.getId()+"\" }").getBytes()).responseString(new Handler<String>() {
+                    @Override
+                    public void success(com.github.kittinunf.fuel.core.Request request, com.github.kittinunf.fuel.core.Response response, String s) {
+                        db.collection("Genes").document(user.getUid()).set(new Genetics(s));
                     }
-                }catch (IOException e){
-                    Toast.makeText(getActivity(),"Error. Please try again.", Toast.LENGTH_LONG).show();
-                }
-//                Log.e("selected file: ", entity.toString());
-//                com.iter.marmoset.AppChains chains = new com.iter.marmoset.AppChains(token.getAccessToken(), "api.sequencing.com");
-//                com.iter.marmoset.AppChains.Report result = chains.getReport("StartApp", "Chain8006", entity.getId());
-//                //chains.getReportBatch()
-//
-//                if (!result.isSucceeded())
-//                    System.out.println("Request has failed");
-//                else
-//                    System.out.println("Request has succeeded");
-//
-//                for (com.iter.marmoset.AppChains.Result r : result.getResults())
-//                {
-//                    com.iter.marmoset.AppChains.ResultType type = r.getValue().getType();
-//
-//                    if (type == com.iter.marmoset.AppChains.ResultType.TEXT)
-//                    {
-//                        com.iter.marmoset.AppChains.TextResultValue v = (com.iter.marmoset.AppChains.TextResultValue) r.getValue();
-//                        Log.e(r.getName(), v.getData());
-//                    }
-//                }
 
+                    @Override
+                    public void failure(com.github.kittinunf.fuel.core.Request request, com.github.kittinunf.fuel.core.Response response, FuelError fuelError) {
+
+                    }
+                });
             }
         }, null);
     }

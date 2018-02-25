@@ -5,23 +5,22 @@ package com.iter.marmoset;
  */
 
 public class Booking {
-    public Booking(String client_id, String client_name, String date, String salon_name, String service, String session, String stylist, int id) {
+    public Booking(String client_id, String client_name, String date, String salon_name, String service, String session, String stylist, String salon_id) {
         this.client_id = client_id;
         this.client_name = client_name;
         this.date = date;
         this.salon_name = salon_name;
         this.service = service;
+        this.salon_id = salon_id;
         this.session = session;
         this.stylist = stylist;
-        this.id = id;
     }
 
     public Booking(){
 
     }
 
-    String client_id, client_name, date, salon_name, service, session, stylist;
-    int id;
+    String client_id, client_name, date, salon_name, service, session, stylist, salon_id;
 
     public String getClient_id() {
         return client_id;
@@ -79,11 +78,11 @@ public class Booking {
         this.stylist = stylist;
     }
 
-    public int getId() {
-        return id;
+    public String getSalon_id() {
+        return salon_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSalon_id(String salon_id) {
+        this.salon_id = salon_id;
     }
 }

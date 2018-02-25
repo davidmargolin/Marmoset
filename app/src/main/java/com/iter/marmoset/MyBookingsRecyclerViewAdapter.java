@@ -1,7 +1,8 @@
 package com.iter.marmoset;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,12 @@ import java.util.ArrayList;
 public class MyBookingsRecyclerViewAdapter extends RecyclerView.Adapter<MyBookingsRecyclerViewAdapter.ViewHolder> {
 
     private final ArrayList<Booking> mValues;
-
-    public MyBookingsRecyclerViewAdapter(ArrayList<Booking> bookings) {
+    Boolean business;
+    Context context;
+    public MyBookingsRecyclerViewAdapter(ArrayList<Booking> bookings, Boolean business, Context context) {
         mValues = bookings;
+        this.business = business;
+        this.context = context;
     }
 
     @Override
@@ -25,11 +29,20 @@ public class MyBookingsRecyclerViewAdapter extends RecyclerView.Adapter<MyBookin
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.timeView.setText(mValues.get(position).getDate() + " - "+mValues.get(position).getSession());
         holder.nameView.setText(mValues.get(position).getSalon_name());
         holder.serviceView.setText(mValues.get(position).getService()+" with "+mValues.get(position).getStylist());
-
+        if (business){
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, BookingViewActivity.class);
+                    intent.putExtra("id", mValues.get(position).getClient_id());
+                    context.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
