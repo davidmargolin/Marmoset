@@ -10,9 +10,9 @@ import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
-import com.sequencing.oauth.config.AuthenticationParameters
+import com.sequencing.androidoauth.core.ISQAuthCallback
 import com.sequencing.oauth.core.Token
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 // sign in response id and providers used with AuthUI
@@ -20,16 +20,12 @@ private const val RC_SIGN_IN = 420
 private val providers = mutableListOf(
         AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build())
 
-class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractionListener, ProfileFragment.OnProfileFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractionListener, ProfileFragment.OnProfileFragmentInteractionListener, ISQAuthCallback {
     var bottomnav : BottomNavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         FirebaseApp.initializeApp(this)
         super.onCreate(savedInstanceState)
-        val parameters = AuthenticationParameters.ConfigurationBuilder()
-                .withRedirectUri("www://login/Default/Authcallback")
-                .withClientId("Marmoset")
-                .withClientSecret("nfrrgi4LmKnBbSS2E_b-CJYJgLgs9xe_7rSAepMq66a0ArNbpnBZkoTjX5-Qe-tXewjvBcOhQHUltWZ8n4S5Tw")
-                .build()
+
         setContentView(R.layout.activity_main)
 
         bottomnav = navigation
@@ -69,9 +65,9 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
                 return@OnNavigationItemSelectedListener true
             }
             R.id.profile -> {
-                val user = FirebaseAuth.getInstance().currentUser
+                val user = FirebaseAuth.getInstance().currentUser!!
 
-                val profileFragment: Fragment = ProfileFragment.newInstance(user!!.displayName, user!!.photoUrl.toString(), "test", user!!.email)
+                val profileFragment: Fragment = ProfileFragment.newInstance(user.displayName, user.photoUrl.toString(), "test", user!!.email)
                 supportFragmentManager.beginTransaction().replace(R.id.content_view, profileFragment).commit()
                 return@OnNavigationItemSelectedListener true
             }
@@ -111,6 +107,17 @@ class MainActivity : AppCompatActivity(), SalonFragment.OnListFragmentInteractio
             putExtra("slideshow", salon.slideshow)
         }
         startActivity(intent)
+    }
+
+    override fun onAuthentication(token: Token) {
+        Log.i("IDK", "Authenticated")
+        // TODO: save token
+        Log.e("this is the token!!!: ", token.accessToken)
+        bottomnav!!.selectedItemId = R.id.profile
+    }
+
+    override fun onFailedAuthentication(e: Exception) {
+        Log.w("IDK", "Failure to authenticate user")
     }
 
 

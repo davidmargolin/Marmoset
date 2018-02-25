@@ -1,7 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.iter.marmoset.ProfileFragment">
     <LinearLayout
@@ -30,4 +31,12 @@
             android:id="@+id/prof_name"
             tools:text="Jenny Carter"/>
     </LinearLayout>
-</FrameLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/holo_green_light"
+        android:layout_margin="8dp"
+        android:id="@+id/sequence_connect"
+        android:text="Continue with Sequencing.com"
+        />
+</LinearLayout>

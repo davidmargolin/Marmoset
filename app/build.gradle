@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -12,17 +13,28 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
+
+    packagingOptions {
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
+
 }
 
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support:design:27.0.2'
@@ -38,9 +50,10 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.stripe:stripe-android:6.0.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.sequencing:master-plugin:1.0.32'
+    implementation('com.sequencing:master-plugin:1.0.32') {
+        exclude module: 'httpclient'
+    }
+    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 }
-
-
 
 apply plugin: 'com.google.gms.google-services'

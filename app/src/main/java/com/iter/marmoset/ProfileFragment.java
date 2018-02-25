@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
+import com.sequencing.androidoauth.core.SQUIoAuthHandler;
+import com.sequencing.oauth.config.AuthenticationParameters;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -59,7 +61,14 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         CircleImageView profPic = view.findViewById(R.id.prof_pic);
         EditText profName = view.findViewById(R.id.prof_name);
-
+        Button sequenceConnect = view.findViewById(R.id.sequence_connect);
+        AuthenticationParameters parameters = new AuthenticationParameters.ConfigurationBuilder()
+                .withRedirectUri("wmw://login/Default/Authcallback")
+                .withClientId("Marmoset")
+                .withClientSecret("nfrrgi4LmKnBbSS2E_b-CJYJgLgs9xe_7rSAepMq66a0ArNbpnBZkoTjX5-Qe-tXewjvBcOhQHUltWZ8n4S5Tw")
+                .build();
+        SQUIoAuthHandler ioAuthHandler = new SQUIoAuthHandler(getActivity());
+        ioAuthHandler.authenticate(sequenceConnect, (MainActivity)getActivity(), parameters);
         Picasso.with(getActivity()).load(image_url).placeholder(getResources()
                 .getDrawable(R.drawable.ic_account_circle_black_24dp))
                 .error(getResources().getDrawable(R.drawable.ic_account_circle_black_24dp))
